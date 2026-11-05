@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>陈锦浩楠 · 艺术与科技作品集</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#171a20; --panel2:#1e2229;
+  --line:#2a2f38; --text:#e8eaed; --muted:#9aa1ad;
+  --accent:#d9a441; --accent2:#e6b95c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;min-height:100vh;overflow-x:hidden}
+header{position:sticky;top:0;z-index:20;background:rgba(15,17,21,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 20px}
+.hd-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand h1{font-size:18px;font-weight:700;letter-spacing:.5px}
+.brand p{font-size:12px;color:var(--muted);margin-top:2px}
+.hd-actions{display:flex;align-items:center;gap:12px}
+.counter{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;transition:.2s}
+.btn:hover{border-color:var(--accent);color:var(--accent2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#14171b;font-weight:600}
+.btn.primary:hover{background:var(--accent2)}
+main{max-width:1200px;margin:0 auto;padding:24px 20px 40px}
+.viewer{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.stage{position:relative;background:#0a0b0e;display:flex;align-items:center;justify-content:center;min-height:340px}
+.stage img{display:block;width:100%;max-width:1120px;height:auto;box-shadow:0 8px 30px rgba(0,0,0,.5);user-select:none}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:rgba(30,34,41,.85);color:var(--text);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:10}
+.nav-btn:hover{background:var(--accent);color:#14171b;border-color:var(--accent)}
+.nav-btn.prev{left:16px}.nav-btn.next{right:16px}
+.toolbar{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 16px;border-top:1px solid var(--line);background:var(--panel2);flex-wrap:wrap}
+.toolbar .btn{padding:7px 12px;font-size:12px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding:16px;border-top:1px solid var(--line);background:var(--panel);scrollbar-width:thin}
+.thumbs img{width:120px;height:67px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.6;transition:.2s;border:2px solid transparent;flex-shrink:0}
+.thumbs img:hover{opacity:.9}
+.thumbs img.active{opacity:1;border-color:var(--accent)}
+.info{max-width:1200px;margin:24px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card h3{font-size:14px;color:var(--accent2);margin-bottom:12px;letter-spacing:.5px}
+.card ul{list-style:none}
+.card li{font-size:13px;color:var(--muted);padding:6px 0;border-bottom:1px dashed var(--line)}
+.card li:last-child{border-bottom:none}
+.card li b{color:var(--text);font-weight:600}
+footer{max-width:1200px;margin:0 auto;padding:24px 20px 40px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8}
+@media(max-width:768px){
+  .hd-inner{flex-direction:column;align-items:flex-start;gap:8px}
+  .stage{min-height:200px}
+  .nav-btn{width:40px;height:40px;font-size:18px}
+  .info{grid-template-columns:1fr;gap:12px}
+  .brand h1{font-size:16px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd-inner">
+    <div class="brand">
+      <h1>陈锦浩楠 · 艺术与科技</h1>
+      <p>空间设计 × 展陈设计 × 视觉与IP · 南京工业大学 · 2025届</p>
+    </div>
+    <div class="hd-actions">
+      <span class="counter" id="counter">1 / 50</span>
+      <button class="btn" onclick="toTop()">回到顶部</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="viewer">
+    <div class="stage">
+      <button class="nav-btn prev" onclick="prev()" aria-label="上一页">‹</button>
+      <img id="mainImg" src="assets/p01.jpg" alt="作品集第1页">
+      <button class="nav-btn next" onclick="next()" aria-label="下一页">›</button>
+    </div>
+    <div class="toolbar">
+      <button class="btn" onclick="first()">首页</button>
+      <button class="btn" onclick="prev()">上一页</button>
+      <span class="counter">第 <span id="cur">1</span> / 50 页</span>
+      <button class="btn" onclick="next()">下一页</button>
+      <button class="btn" onclick="last()">末页</button>
+      <button class="btn" onclick="toggleFull()">全屏</button>
+    </div>
+    <div class="thumbs" id="thumbs"></div>
+  </div>
+
+  <div class="info">
+    <div class="card">
+      <h3>设计方向</h3>
+      <ul>
+        <li><b>展陈设计</b> ｜ 展厅 / 展馆空间规划与展陈</li>
+        <li><b>空间设计</b> ｜ 商业空间 · 校园空间 · 文旅空间</li>
+        <li><b>视觉与IP</b> ｜ 视觉传达 · 品牌与IP改编</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>专业技能</h3>
+      <ul>
+        <li><b>三维制图</b> ｜ AutoCAD · SketchUp · 3ds Max</li>
+        <li><b>视觉平面</b> ｜ Photoshop · Illustrator</li>
+        <li><b>作品项目</b> ｜ 博物馆 · 校史馆 · 咖啡厅 · 展厅 · 家具 · IP</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer>
+  陈锦浩楠 · 南京工业大学艺术与科技本科 · 求职方向：展陈设计 / 展厅空间设计 / 企业文化展厅<br>
+  联系方式：18913017959 · 410068538@qq.com
+</footer>
+
+<script>
+const TOTAL = 50;
+let cur = 1;
+
+// 生成缩略图
+const thumbs = document.getElementById('thumbs');
+for(let i=1;i<=TOTAL;i++){
+  const img = document.createElement('img');
+  img.src = 'assets/p' + String(i).padStart(2,'0') + '.jpg';
+  img.alt = '第'+i+'页';
+  img.dataset.n = i;
+  img.addEventListener('click', ()=>go(i));
+  thumbs.appendChild(img);
+}
+
+function update(){
+  const img = document.getElementById('mainImg');
+  img.src = 'assets/p' + String(cur).padStart(2,'0') + '.jpg';
+  img.alt = '作品集第'+cur+'页';
+  document.getElementById('cur').textContent = cur;
+  document.getElementById('counter').textContent = cur + ' / ' + TOTAL;
+  const t = thumbs.querySelectorAll('img');
+  t.forEach(x=>x.classList.toggle('active', +x.dataset.n===cur));
+  // 缩略图跟随滚动
+  const act = thumbs.querySelector('img.active');
+  if(act) act.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+}
+function go(n){ cur = Math.max(1,Math.min(TOTAL,n)); update(); }
+function prev(){ go(cur-1); }
+function next(){ go(cur+1); }
+function first(){ go(1); }
+function last(){ go(TOTAL); }
+function toTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+function toggleFull(){
+  const el = document.documentElement;
+  if(!document.fullscreenElement){ el.requestFullscreen && el.requestFullscreen(); }
+  else { document.exitFullscreen && document.exitFullscreen(); }
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowLeft') prev();
+  if(e.key==='ArrowRight') next();
+});
+// 触摸滑动
+let tx=null;
+const stage = document.querySelector('.stage');
+stage.addEventListener('touchstart', e=>{ tx = e.touches[0].clientX; }, {passive:true});
+stage.addEventListener('touchend', e=>{
+  if(tx===null) return;
+  const dx = e.changedTouches[0].clientX - tx;
+  if(Math.abs(dx) > 50){ dx<0 ? next() : prev(); }
+  tx=null;
+}, {passive:true});
+update();
+</script>
+</body>
+</html>
